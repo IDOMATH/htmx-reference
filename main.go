@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello world")
 
 	router := http.NewServeMux()
 
@@ -18,6 +17,7 @@ func main() {
 
 	router.HandleFunc("GET /", handleHome)
 
+	fmt.Println("server started on port 8080")
 	log.Fatal(server.ListenAndServe())
 }
 
