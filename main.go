@@ -2,9 +2,23 @@ package main
 
 import (
 	"fmt"
+	"html/template"
+	"io"
 	"log"
 	"net/http"
 )
+
+type Tmpl struct {
+	tmpl *template.Template
+}
+
+func (t *Tmpl) Render(w io.Writer, name string, data interface{}) error {
+	return t.tmpl.ExecuteTemplate(w, name, data)
+}
+
+func newTemplate() *Tmpl {
+	return &Tmpl{tmpl: template.Must(template.ParseGlob("*.html"))}
+}
 
 func main() {
 
