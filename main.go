@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"io"
@@ -20,6 +21,8 @@ func newTemplate() *Tmpl {
 	return &Tmpl{tmpl: template.Must(template.ParseGlob("*.html"))}
 }
 
+var templates map[string]*template.Template
+
 func main() {
 
 	router := http.NewServeMux()
@@ -29,6 +32,14 @@ func main() {
 		Handler: router,
 	}
 
+	templates = make(map[string]*template.Template)
+
+	tmpl, err := template.New("index").ParseFiles("./views/index.html")
+	if err != nil {
+		panic("could not make index template")
+	}
+	templates["index"] = tmpl
+
 	router.HandleFunc("GET /", handleHome)
 
 	fmt.Println("server started on port 8080")
@@ -36,5 +47,19 @@ func main() {
 }
 
 func handleHome(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Welcome Home"))
+	buf := new(bytes.Buffer)
+
+	err := templates["index"].Execute(w, nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Render the template
+	_, err = buf.WriteTo(w)
+	if err != nil {
+		fmt.Println("Error writing template to browser", err)
+		return
+	}
+
 }
