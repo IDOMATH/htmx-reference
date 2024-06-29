@@ -5,9 +5,9 @@ import (
 	"net/http"
 )
 
-func Logger(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("URL: ", r.URL)
-		next(w, r)
-	}
+func Logger(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(r.Method, r.URL)
+		next.ServeHTTP(w, r)
+	})
 }

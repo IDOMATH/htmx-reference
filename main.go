@@ -7,6 +7,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/idomath/htmx-reference/middleware"
 )
 
 type Tmpl struct {
@@ -21,6 +23,10 @@ func newTemplate() *Tmpl {
 	return &Tmpl{tmpl: template.Must(template.ParseGlob("*.html"))}
 }
 
+type TemplateData struct {
+	Count int
+}
+
 var templates map[string]*template.Template
 
 func main() {
@@ -29,7 +35,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: router,
+		Handler: middleware.Logger(router),
 	}
 
 	templates = make(map[string]*template.Template)
@@ -49,7 +55,7 @@ func main() {
 func handleHome(w http.ResponseWriter, r *http.Request) {
 	buf := new(bytes.Buffer)
 
-	err := templates["index"].Execute(w, nil)
+	err := templates["index"].Execute(w, TemplateData{Count: 4})
 
 	if err != nil {
 		log.Fatal(err)
