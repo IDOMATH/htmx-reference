@@ -27,6 +27,8 @@ type TemplateData struct {
 	Count int
 }
 
+var data TemplateData
+
 var templates map[string]*template.Template
 
 func main() {
@@ -39,6 +41,7 @@ func main() {
 	}
 
 	templates = make(map[string]*template.Template)
+	data.Count = 0
 
 	tmpl, err := template.New("index").ParseFiles("./views/index.html")
 	if err != nil {
@@ -54,8 +57,9 @@ func main() {
 
 func handleHome(w http.ResponseWriter, r *http.Request) {
 	buf := new(bytes.Buffer)
+	data.Count++
 
-	err := templates["index"].Execute(w, TemplateData{Count: 4})
+	err := templates["index"].Execute(w, data)
 
 	if err != nil {
 		log.Fatal(err)
