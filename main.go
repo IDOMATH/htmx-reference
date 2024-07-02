@@ -50,12 +50,31 @@ func main() {
 	templates["index"] = tmpl
 
 	router.HandleFunc("GET /", handleHome)
+	router.HandleFunc("POST /count", handlePostCount)
 
 	fmt.Println("server started on port 8080")
 	log.Fatal(server.ListenAndServe())
 }
 
 func handleHome(w http.ResponseWriter, r *http.Request) {
+	buf := new(bytes.Buffer)
+
+	err := templates["index"].Execute(w, data)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Render the template
+	_, err = buf.WriteTo(w)
+	if err != nil {
+		fmt.Println("Error writing template to browser", err)
+		return
+	}
+
+}
+
+func handlePostCount(w http.ResponseWriter, r *http.Request) {
 	buf := new(bytes.Buffer)
 	data.Count++
 
@@ -71,5 +90,4 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error writing template to browser", err)
 		return
 	}
-
 }
