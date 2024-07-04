@@ -1,17 +1,25 @@
 {{ block "index" . }}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link href="css/style.css" rel="stylesheet">
-            <script src="https://unpkg.com/htmx.org@2.0.0/dist/htmx.js" integrity="sha384-Xh+GLLi0SMFPwtHQjT72aPG19QvKB8grnyRbYBNIdHWc2NkCrz65jlU7YrzO6qRp" crossorigin="anonymous"></script>
-        </title>
-    </head>
-    <body>
-        Count: {{ .Count }}
-        <button hx-target="body" hx-post="localhost:8080/count">Count</button>
-    </body>
+
+<head>
+    <title>Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@2.0.0/dist/htmx.js"
+        integrity="sha384-Xh+GLLi0SMFPwtHQjT72aPG19QvKB8grnyRbYBNIdHWc2NkCrz65jlU7YrzO6qRp"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    {{ template "count" . }}
+</body>
+
 </html>
+{{ end }}
+
+{{ block "count" . }}
+    Count {{ .Count }}
+    <button hx-target="body" hx-post="/count">Count</button>
 {{ end }}
