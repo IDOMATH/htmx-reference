@@ -1,35 +1,16 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"html/template"
-	"io"
 	"log"
 	"net/http"
 
 	"github.com/idomath/htmx-reference/middleware"
+	"github.com/idomath/htmx-reference/render"
+	"github.com/idomath/htmx-reference/types"
 )
 
-type Tmpl struct {
-	tmpl *template.Template
-}
-
-func (t *Tmpl) Render(w io.Writer, name string, data interface{}) error {
-	return t.tmpl.ExecuteTemplate(w, name, data)
-}
-
-func newTemplate() *Tmpl {
-	return &Tmpl{tmpl: template.Must(template.ParseGlob("*.html"))}
-}
-
-type TemplateData struct {
-	Count int
-}
-
-var data TemplateData
-
-var templates map[string]*template.Template
+var data *types.TemplateData
 
 func main() {
 
@@ -40,14 +21,7 @@ func main() {
 		Handler: middleware.Logger(router),
 	}
 
-	templates = make(map[string]*template.Template)
-	data.Count = 0
-
-	tmpl, err := template.New("index").ParseFiles("./views/index.html")
-	if err != nil {
-		panic("could not make index template")
-	}
-	templates["index"] = tmpl
+	data = &types.TemplateData{Count: 0}
 
 	router.HandleFunc("GET /", handleHome)
 	router.HandleFunc("POST /count", handlePostCount)
@@ -57,37 +31,10 @@ func main() {
 }
 
 func handleHome(w http.ResponseWriter, r *http.Request) {
-	buf := new(bytes.Buffer)
-
-	err := templates["index"].Execute(w, data)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Render the template
-	_, err = buf.WriteTo(w)
-	if err != nil {
-		fmt.Println("Error writing template to browser", err)
-		return
-	}
-
+	render.Template(w, r, "index.html", data)
 }
 
 func handlePostCount(w http.ResponseWriter, r *http.Request) {
-	buf := new(bytes.Buffer)
 	data.Count++
-
-	err := templates["index"].Execute(w, data)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Render the template
-	_, err = buf.WriteTo(w)
-	if err != nil {
-		fmt.Println("Error writing template to browser", err)
-		return
-	}
+	render.Template(w, r, "count.html", data)
 }
