@@ -1,5 +1,11 @@
 package types
 
 type TemplateData struct {
-	Count int
+	Count    int
+	Contacts []Contact
+}
+
+type Contact struct {
+	Name  string
+	Email string
 }

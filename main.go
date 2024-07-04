@@ -21,10 +21,20 @@ func main() {
 		Handler: middleware.Logger(router),
 	}
 
-	data = &types.TemplateData{Count: 0}
+	data = &types.TemplateData{Count: 0,
+		Contacts: []types.Contact{
+			types.Contact{Name: "John", Email: "jd@gmail.com"},
+			types.Contact{Name: "Clara", Email: "cd@gmail.com"},
+		}}
+
+	data.Contacts = []types.Contact{
+		types.Contact{Name: "John", Email: "jd@gmail.com"},
+		types.Contact{Name: "Clara", Email: "cd@gmail.com"},
+	}
 
 	router.HandleFunc("GET /", handleHome)
 	router.HandleFunc("POST /count", handlePostCount)
+	router.HandleFunc("POST /contacts", handlePostContacts)
 
 	fmt.Println("server started on port 8080")
 	log.Fatal(server.ListenAndServe())
@@ -37,4 +47,12 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 func handlePostCount(w http.ResponseWriter, r *http.Request) {
 	data.Count++
 	render.Template(w, r, "count.html", data)
+}
+
+func handlePostContacts(w http.ResponseWriter, r *http.Request) {
+	name := r.FormValue("name")
+	email := r.FormValue("email")
+
+	data.Contacts = append(data.Contacts, types.Contact{Name: name, Email: email})
+	render.Template(w, r, "index.html", data)
 }
