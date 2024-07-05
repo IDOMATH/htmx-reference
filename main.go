@@ -54,5 +54,5 @@ func handlePostContacts(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 
 	data.Contacts = append(data.Contacts, types.Contact{Name: name, Email: email})
-	render.Template(w, r, "index.html", data)
+	render.Template(w, r, "display.html", data)
 }
