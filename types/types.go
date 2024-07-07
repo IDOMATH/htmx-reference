@@ -18,3 +18,8 @@ func (d *TemplateData) HasEmail(email string) bool {
 	}
 	return false
 }
+
+type FormData struct {
+	Values map[string]string
+	Errors map[string]string
+}
