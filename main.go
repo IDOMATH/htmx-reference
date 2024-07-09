@@ -23,13 +23,13 @@ func main() {
 
 	data = &types.TemplateData{Count: 0,
 		Contacts: []types.Contact{
-			types.Contact{Name: "John", Email: "jd@gmail.com"},
-			types.Contact{Name: "Clara", Email: "cd@gmail.com"},
+			{Name: "John", Email: "jd@gmail.com"},
+			{Name: "Clara", Email: "cd@gmail.com"},
 		}}
 
 	data.Contacts = []types.Contact{
-		types.Contact{Name: "John", Email: "jd@gmail.com"},
-		types.Contact{Name: "Clara", Email: "cd@gmail.com"},
+		{Name: "John", Email: "jd@gmail.com"},
+		{Name: "Clara", Email: "cd@gmail.com"},
 	}
 
 	router.HandleFunc("GET /", handleHome)
