@@ -1,7 +1,15 @@
 {{ block "form" . }}
     <form hx-target="#contacts" hx-post="/contacts">
-        name: <input type="text" name="name"/>
-        email: <input type="text" name="email"/>
+        name: <input 
+            {{ if .Form.Values.name }} value="{{ .Form.Values.name }}" {{ end }}
+            type="text" name="name"/>
+        email: <input
+            {{ if .Form.Values.email }} values="{{ .Form.Values.email }}" {{ end }} 
+            type="text" name="email"/>
+
+            {{ if .Form.Errors.email }}
+                <div style="color: red"> {{ .Form.Errors.email }} </div>
+            {{ end }}
         <button type="submit">Create Contact</button>
     </form>
 {{ end }}

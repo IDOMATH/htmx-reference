@@ -3,6 +3,7 @@ package types
 type TemplateData struct {
 	Count    int
 	Contacts []Contact
+	Form     FormData
 }
 
 type Contact struct {

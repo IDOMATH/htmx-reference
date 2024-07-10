@@ -53,6 +53,18 @@ func handlePostContacts(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 	email := r.FormValue("email")
 
+	if data.HasEmail(email) {
+		formData := types.NewFormData()
+		formData.Values["name"] = name
+		formData.Values["email"] = email
+		formData.Errors["email"] = "Email already exists"
+
+		data.Form = *formData
+
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		render.Template(w, r, "form.html", data)
+	}
+
 	data.Contacts = append(data.Contacts, types.Contact{Name: name, Email: email})
 	render.Template(w, r, "display.html", data)
 }
